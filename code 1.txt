@@ -1,0 +1,1016 @@
+#include<stdio.h>
+#include<conio.h>
+#include<string.h>
+#include<process.h>
+#include<ctype.h>
+#define go(r,c) gotoxy(c,r)
+enum boolean{
+	false,true
+};
+struct candidate{
+	char name[51],address[51],gender[7],mobile[11],pincode[7];
+	int age,ID;
+};
+struct voter{
+	char name[51],address[51],gender[7],mobile[11],pincode[7];
+	int age,ID;
+};
+struct password{
+	char password[25];
+};
+void colorbox(int size){
+	int i;
+	textbackground(BLUE);
+	for(i=1;i<=size;i++)
+		cprintf(" ");
+	textbackground(BLACK);
+}
+void centerh(char *str, int row, int color){
+	int column=40-strlen(str)/2;
+	gotoxy(column,row);
+	textcolor(color);
+	cprintf("%s",str);
+	textcolor(WHITE);
+}
+FILE *fp;
+struct candidate c;
+int isValidc_Name(char *name){
+	int i=0;
+	if(!(strlen(name)>=4 && strlen(name)<=50)){
+		return 0;
+	}
+	while(name[i]){
+		if(!(isalpha(name[i]) ||name[i]=='.' || name[i]==' '))
+		{
+			return 0;
+		}
+		i++;
+	}
+	return 1;
+}
+int isValidc_mobile(char *mobile){
+	if(!(strlen(mobile)==10)){
+	}
+	return 1;
+}
+int isValidc_address(char *address){
+	if(!(strlen(address)>=4 && strlen(address)<=50)){
+	}
+	return 1;
+}
+int isValidc_pincode(char *pincode){
+	if(!(strlen(pincode)==6)){
+	}
+	return 1;
+}
+
+int getNextcid(){
+	int count=0;
+	rewind(fp);
+	while(fread(&c,sizeof(c),1,fp))
+	{
+		count++;
+	}
+	return (count+1);
+}
+FILE *fp;
+struct voter v;
+int isValidv_Name(char *name){
+	int i=0;
+	if(!(strlen(name)>=4 && strlen(name)<=50)){
+		return 0;
+	}
+	while(name[i]){
+		if(!(isalpha(name[i]) ||name[i]=='.' || name[i]==' '))
+		{
+			return 0;
+		}
+		i++;
+	}
+	return 1;
+}
+int isValidv_mobile(char *mobile){
+	if(!(strlen(mobile)==10)){
+	}
+	return 1;
+}
+int isValidv_address(char *address){
+	if(!(strlen(address)>=4 && strlen(address)<=50)){
+	}
+	return 1;
+}
+int isValidv_pincode(char *pincode){
+	if(!(strlen(pincode)==6)){
+	}
+	return 1;
+}
+
+int getNextvid(){
+	int count=0;
+	rewind(fp);
+	while(fread(&v,sizeof(v),1,fp))
+	{
+		count++;
+	}
+	return (count+1);
+}
+void screenwelcome ();//welcome screen//
+
+void screenfirst();//first screen//
+
+void screen1();/* Login Screen */
+
+void screen1_1();//Main menu//
+
+void screen1_1_1();//Candidate Management//
+
+void screen1_1_1_1();//candidate-- add new candidate//
+
+void screen1_1_1_2();//candidate---view all candidate//
+
+void screen1_1_1_3();//candidate--search the candidate//
+
+void screen1_1_1_4();//candidate---update the candidate//
+
+void screen1_1_1_5();//return //
+
+void screen1_2_1();//voter management//
+
+void screen1_2_1_1();//voter-- add new voter//
+
+void screen1_2_1_2();//voter---view all voter//
+
+void screen1_2_1_3();//voter--search the voter//
+
+void screen1_2_1_4();//voter---update the voter//
+
+void screen1_2_1_5();//return//
+
+void screen1_3_1();//voting---Voter login//
+
+void screen1_3_2();//voting--Cast the vote//
+
+void screen1_4();//result//
+
+void screen1_4_1();//result-- vote count//
+
+void screen1_4_2();//result--- winner//
+
+void screen1_5();//change the password//
+
+void main(){
+	screenwelcome();
+	screenfirst();
+}
+//welcome screen//
+void screenwelcome(){
+	system("cls");
+		textbackground(BLACK);
+		clrscr();
+		centerh("========== WELCOME TO ELECTION MANAGEMENT SYSTEM ==========",5,CYAN);
+		centerh("========== Developed by TEAM CREST  ==========",8,YELLOW);
+		centerh("========== This is made under the guidance of DR. B.P Sharma (sir) ==========",11,RED);		
+		go(14,30);system("pause");
+}
+//first screen//
+void screenfirst(){
+	char choice;
+	for(;;){
+		system("cls");
+		textbackground(BLACK);
+		clrscr();
+		centerh("========== WELCOME TO ELECTION MANAGEMENT SYSTEM ==========",5,CYAN);
+		textcolor(RED);
+		go(8,20);cprintf("A");textcolor(WHITE);cprintf("dmin");	
+		textcolor(RED);
+		go(10,20);cprintf("V");textcolor(WHITE);cprintf("oter");
+		go(24,20);textcolor(WHITE);cprintf("Select a choice from highlighed characters");
+		textcolor(WHITE);
+		go(21,20);textcolor(WHITE);cprintf("Enter choice : ");
+		fflush(stdin);
+		choice=getchar();
+		switch(choice){
+			case 'a' : case 'A':
+				screen1();
+					break;
+			case 'v' : case 'V':
+				screen1_3_1();
+					break;
+			default:
+				go(24,20);printf("Invalid Choice... Press a key to continue...");getch();
+				go(24,20);system("pause");fclose(fp);
+		}
+	}
+}
+//login screen//
+void screen1(){
+	char userid[51],password[51],ch;
+	int i=0;
+	system("cls");
+	textbackground(BLACK);
+	clrscr();
+	centerh("========== Admin Authentication ==========",5,CYAN);
+	go(10,20);textcolor(WHITE);cprintf("User ID");
+	go(10,30); printf(":");go(10,35);colorbox(8);
+	go(12,20);textcolor(WHITE);cprintf("Password");
+	go(12,30); printf(":");go(12,35);colorbox(8);
+	textcolor(WHITE);
+	go(24,20);colorbox(40);
+	go(24,20);printf("Please enter your User ID here");
+	go(10,35);gets(userid);
+	go(24,20);colorbox(40);
+	go(24,20);printf("Please enter your Password here");
+	go(12,35);
+	while(i<50){
+		ch=getch();
+		if(ch==13) break;
+		else if(ch==8){
+			if(i>0){
+				int n;
+				i--;
+				go(12,35);clreol();
+				go(12,35);
+				for(n=0;n<i;n++) putchar('*');
+			}
+		}
+		else{
+			password[i]=ch;
+			putchar('*');
+			i++;
+		}
+	}
+	password[i]='\0';
+	if(strcmp(userid,"admin")==0 && strcmp(password,"123456")==0)
+	{
+		screen1_1();
+	}
+	else
+	{
+		go(17,20);printf("Sorry Invalid authentication");
+		go(24,20);printf("Press any key to contine...");
+		getch();
+	}
+}
+//Main Menu//
+void screen1_1(){
+	char choice;
+	for(;;){
+		system("cls");
+		textbackground(BLACK);
+		clrscr();
+		centerh("========== Main Menu =========",5,CYAN);
+		textcolor(RED);
+		go(8,20);cprintf("C");textcolor(WHITE);cprintf("andidate Management");
+		textcolor(RED);
+		go(10,20);cprintf("V");textcolor(WHITE);cprintf("oter Management");
+		textcolor(RED);
+		go(12,20);cprintf("R");textcolor(WHITE);cprintf("esult");
+		textcolor(RED);
+		go(14,20);printf("change ");cprintf("P");textcolor(WHITE);cprintf("assword");
+		textcolor(RED);
+		go(16,20);cprintf("L");textcolor(WHITE);cprintf("ogout");
+		go(24,20);textcolor(WHITE);cprintf("Select a choice from highlighed characters");
+		textcolor(WHITE);
+		go(20,20);textcolor(WHITE);cprintf("Enter choice : ");
+		fflush(stdin);
+		choice=getchar();
+		switch(choice){
+			case 'c' : case 'C':
+				screen1_1_1();
+				break;
+			case 'v' : case 'V':
+				screen1_2_1();
+				break;
+			case 'r' : case 'R':
+				screen1_4();
+				break;
+		    case 'p' : case 'P':
+				screen1_5();
+				break;
+			case 'l': case 'L':
+				exit(0);
+			default:
+				go(24,20);printf("Invalid Choice... Press a key to continue...");
+				go(24,20);system("pause");
+		}
+	}
+}
+//Candidate management//
+void screen1_1_1(){
+	char  choice;
+	fp=fopen("candidate.dat","rb+");
+	if(fp==NULL)
+		fp=fopen("candidate.dat","wb+");
+	for(;;){
+		system("cls");
+		textbackground(BLACK);
+		clrscr();
+		centerh("========== Sub  Menu - Candidate Management ==========",5,CYAN);
+		textcolor(RED);
+		go(8,20);cprintf("A");textcolor(WHITE);cprintf("dd new Candidate");
+		textcolor(RED);
+		go(10,20);cprintf("V");textcolor(WHITE);cprintf("iew all Candidate");
+		textcolor(RED);
+		go(12,20);cprintf("S");textcolor(WHITE);cprintf("earch a Candidate");
+		textcolor(RED);
+		go(14,20);cprintf("U");textcolor(WHITE);cprintf("pdate data of Candidate");
+		textcolor(RED);
+		go(16,20);cprintf("R");textcolor(WHITE);cprintf("eturn");
+		go(24,20);textcolor(WHITE);cprintf("Select a choice from highlighed characters");
+		textcolor(WHITE);
+		go(21,20);textcolor(WHITE);cprintf("Enter choice : ");
+		fflush(stdin);
+		choice=getchar();
+		switch(choice){
+			case 'a' : case 'A':
+				screen1_1_1_1();
+					break;
+			case 'v' : case 'V':
+				screen1_1_1_2();
+					break;
+			case 's' : case 'S':
+				screen1_1_1_3();
+					break;
+			case 'u' : case 'U':
+				screen1_1_1_4();
+					break;
+			case'r':case 'R':
+				return;
+			default:
+				go(24,20);printf("Invalid Choice... Press a key to continue...");getch();
+				go(24,20);system("pause");fclose(fp);
+		}
+	}
+}
+//candidate-- add new candidate//
+void screen1_1_1_1(){
+	struct candidate c;
+	char choice;
+	fp=fopen("candidate.dat","rb+");
+	if(fp==NULL){
+		fp=fopen("candidate.dat","wb+");
+	}
+	for(;;){
+		textbackground(BLACK);
+		system("cls");
+		centerh("========== Add new Candidate ==========",2,CYAN);
+		c.ID=getNextcid();
+		go(6,20);printf("ID");
+		go(6,30); printf(":");go(6,35);printf("%d\n",c.ID);
+		go(8,20);printf("Name");
+		go(8,30); printf(":");go(8,35);colorbox(40);
+		go(10,20);printf("Age");
+		go(10,30); printf(":");go(10,35);colorbox(40);
+		go(12,20);printf("Gender");
+		go(12,30); printf(":");go(12,35);colorbox(40);
+		go(14,20);printf("Mobile");
+		go(14,30); printf(":");go(14,35);colorbox(40);
+		go(16,20);printf("Address");
+		go(16,30); printf(":");go(16,35);colorbox(40);
+		go(18,20);printf("Pin Code");
+		go(18,30); printf(":");go(18,35);colorbox(40);
+		textcolor(WHITE);
+		go(24,20);colorbox(40);
+		go(24,20);printf("Please enter you full name here");
+		for(;;){
+			go(8,35);fflush(stdin); gets(c.name);
+			if(isValidc_Name(c.name)){
+				break;
+			}
+			else{
+			 go(24,20);printf("Invalid Name... Reenter it : ");
+			}	
+		}
+		go(24,20);colorbox(40);
+		go(24,20);printf("Please enter you age here");
+		for(;;){
+			char temp[4];
+			go(10,35);fflush(stdin);scanf("%d",&c.age);
+			if(c.age>=18)
+				break;
+			else{
+			 go(24,20);printf("Invalid Age... Reenter it : ");
+			}
+		}
+		go(24,20);colorbox(40);
+		go(24,20);printf("Please enter you gender");
+		for(;;){
+			go(12,35);fflush(stdin);scanf("%s",c.gender);
+			if(strcmpi(c.gender,"male")==0 || strcmpi(c.gender,"female")==0 || strcmpi(c.gender,"trans")==0)
+				break;
+			else{
+			 go(24,20);printf("Invalid Gender... Reenter : ");
+			}
+		}
+		go(24,20);colorbox(40);
+		go(24,20);printf("Please enter you mobile");
+		for(;;){
+			go(14,35);fflush(stdin);scanf("%s%*c",c.mobile);
+			if(isValidc_mobile(c.mobile)){
+				break;
+			}
+			else{
+			 go(24,20);printf("Invalid Mobile... Reenter it : ");
+			}	
+		}
+		go(14,35);fflush(stdin);scanf("%s%*c",c.mobile);
+		go(24,20);colorbox(40);
+		go(24,20);printf("Please enter you address");
+		for(;;){
+			go(16,35);fflush(stdin);gets(c.address);
+			if(isValidc_address(c.address)){
+				break;
+			}
+			else{
+			 go(24,20);printf("Invalid address... Reenter it : ");
+			}	
+		}
+		go(24,20);colorbox(40);
+		go(24,20);printf("Please enter you pincode");
+		for(;;){
+			go(18,35);fflush(stdin);scanf("%s%*c",c.pincode);
+			if(isValidc_pincode(c.pincode)){
+				break;
+			}
+			else{
+			 go(24,20);printf("Invalid pin code... Reenter it : ");
+			}	
+		}
+		go(20,20);printf("Save record [Y/N] ? ");
+		go(22,45);
+		fflush(stdin);
+		choice=tolower(getchar());
+		if(choice=='y'){
+			fseek(fp,0,SEEK_END);
+			fwrite(&c,sizeof(c),1,fp);
+			go(24,20);printf("Record Saved...\n");
+		}
+		else{
+		 go(24,20);printf("Record Not Saved...\n");
+		}
+		go(24,20);system("pause");fclose(fp);
+		return;
+	}
+}
+//candidate-- View all candidate//
+void screen1_1_1_2(){
+	struct candidate c;
+	int r=10;
+	fseek(fp,0,SEEK_SET); //Set file pointer to top of the file
+	rewind(fp);
+	system("cls");
+	centerh("========== List of Candidate ==========",5,CYAN);
+	go(8,2);printf("%-10s %-10s %-10s %-10s %-10s %-10s %-10s\n","ID","Name","Age","Gender","Mobile","Address","Pin Code");
+	while(fread(&c,sizeof(c),1,fp)){
+		go(r,2);printf("%-10d %-10s %-10d %-10s %-10s %-10s %-10s",c.ID,c.name,c.age,c.gender,c.mobile,c.address,c.pincode);
+		r++;
+	}
+	go(24,20);system("pause");
+	return;
+}
+//candidate -- search candidate//
+void screen1_1_1_3(){
+	struct candidate c;
+	int r,found=false;
+	system("cls");
+	textbackground(BLACK);
+	centerh("========== Search the candidate ==========",2,CYAN);
+	go(5,20);printf("ID to Search ");
+	scanf("%d%*c",&r);
+	fseek(fp,0,SEEK_SET); //Set file pointer to top of the file
+	while(fread(&c,sizeof(c),1,fp)){
+		if(c.ID==r){
+			found=true;
+			break;
+		}
+	}
+	if(found){
+	go(8,20);printf("The record is Found ");
+    go(10,20);printf("ID: %d",c.ID);
+    go(12,20);printf("Name: %s",c.name);
+    go(14,20);printf("Age: %d",c.age);
+    go(16,20);printf("Gender: %s",c.gender);
+    go(18,20);printf("Mobile: %s",c.mobile);
+	go(20,20);printf("Address: %s",c.address);
+	go(22,20);printf("Pin Code: %s",c.pincode);
+	}
+	else{
+		 go(8,20);printf("Not Found\n");
+	}go(24,20);system("pause");
+	return;
+}
+//candidate -- update data of candidate//
+void screen1_1_1_4(){
+	struct candidate c;
+	int r,found=false;
+	system("cls");
+	centerh("========== Update data of Candidate ===========",2,CYAN);
+	go(4,20);printf("ID to update : ");
+	scanf("%d%*c",&r);
+	fseek(fp,0,SEEK_SET); //Set file pointer to top of the file
+	while(fread(&c,sizeof(c),1,fp)){
+		if(c.ID==r){
+			found=true;
+			break;
+		}
+	}
+	if(found){
+	go(6,20);printf("Record is found");
+	go(8,20);printf("Old Name is %s, New Name : ",c.name);
+	go(10,20);printf("Old Age is %d : ",c.age);scanf("%d%*c",&c.age);
+	go(12,20);printf("Old Gender is  %s : ",c.gender);scanf("%s",c.gender);
+	go(14,20);printf("Old Mobile no. is  %s : ",c.mobile);scanf("%s%*c",c.mobile);
+	go(16,20);printf("Old Address is %s : ",c.address); gets(c.address);
+	go(18,20);printf("Old Address is %s :",c.pincode);scanf("%s%*c",c.pincode);
+	fseek(fp,-sizeof(c),SEEK_CUR); // Goto top of the searched record
+	fwrite(&c,sizeof(c),1,fp); //overwrite the current record
+	go(20,20);printf("Record Updated\n");
+	}
+	else{
+		go(7,20);printf("Not Found\n");
+	}
+	go(22,20);printf("\nPress any key  to continue...");
+	getch();
+	return;	
+}			
+//voter management//
+void screen1_2_1(){
+	char  choice;
+	FILE *fp;
+	fp=fopen("voter.dat","rb+");
+	if(fp==NULL){
+		fp=fopen("voter.dat","wb+");
+	}
+	for(;;){
+		system("cls");
+		textbackground(BLACK);
+		clrscr();
+		centerh("========== Sub  Menu - Voter Management ===========",5,CYAN);
+		textcolor(RED);
+		go(8,20);cprintf("A");textcolor(WHITE);cprintf("dd new Voter");
+		textcolor(RED);
+		go(10,20);cprintf("V");textcolor(WHITE);cprintf("iew all Voter");
+		textcolor(RED);
+		go(12,20);cprintf("S");textcolor(WHITE);cprintf("earch a Voter");
+		textcolor(RED);
+		go(14,20);cprintf("U");textcolor(WHITE);cprintf("pdate data of Voter");
+		textcolor(RED);
+		go(16,20);cprintf("R");textcolor(WHITE);cprintf("eturn");
+		go(24,20);textcolor(WHITE);cprintf("Select a choice from highlighed characters");
+		go(21,20);textcolor(WHITE);cprintf("Enter choice : ");
+		fflush(stdin);
+		choice=getchar();
+		switch(choice){
+			case 'a' : case 'A':
+				screen1_2_1_1();
+					break;
+			case 'v' : case 'V':
+				screen1_2_1_2();
+					break;
+			case 's' : case 'S':
+				screen1_2_1_3();
+					break;
+			case 'u' : case 'U':
+				screen1_2_1_4();
+					break;
+			case 'r': case 'R':
+				return;
+			default:
+				go(24,20);
+				printf("Invalid choice... Press key to contine");
+				getch();		
+		}fclose(fp);
+		return;
+	}
+}
+//voter-- add new voter//
+void screen1_2_1_1(){
+	struct voter v;
+	char choice;
+	fp=fopen("voter.dat","rb+");
+	if(fp==NULL){
+		fp=fopen("voter.dat","wb+");
+	}
+	for(;;){
+		system("cls");
+		textbackground(BLACK);
+		centerh("========== Add new Voter ===========",2,CYAN);
+		v.ID=getNextvid();
+		go(5,20);printf("ID");
+		go(5,30); printf(":");go(5,35);printf("%d\n",v.ID);
+		go(8,20);printf("Name");
+		go(8,30); printf(":");go(8,35);colorbox(40);
+		go(10,20);printf("Age");
+		go(10,30); printf(":");go(10,35);colorbox(40);
+		go(12,20);printf("Gender");
+		go(12,30); printf(":");go(12,35);colorbox(40);
+		go(14,20);printf("Mobile");
+		go(14,30); printf(":");go(14,35);colorbox(40);
+		go(16,20);printf("Address");
+		go(16,30); printf(":");go(16,35);colorbox(40);
+		go(18,20);printf("Pin Code");
+		go(18,30); printf(":");go(18,35);colorbox(40);
+		textcolor(WHITE);
+		go(24,20);colorbox(40);
+		go(24,20);printf("Please enter you full name here");
+		for(;;){
+			go(8,35);fflush(stdin); gets(v.name);
+			if(isValidv_Name(v.name)){
+				break;
+			}
+			else{
+			 go(24,20);printf("Invalid Name... Reenter it : ");
+			}	
+		}
+		go(24,20);colorbox(40);
+		go(24,20);printf("Please enter you age here");
+		for(;;){
+			char temp[4];
+			go(10,35);fflush(stdin);scanf("%d",&v.age);
+			if(v.age>=18)
+				break;
+			else{
+			 go(24,20);printf("Invalid Age... Reenter it : ");
+			}
+		}
+		go(24,20);colorbox(40);
+		go(24,20);printf("Please enter you gender");
+		for(;;){
+			go(12,35);fflush(stdin);scanf("%s",v.gender);
+			if(strcmpi(v.gender,"male")==0 || strcmpi(v.gender,"female")==0 || strcmpi(v.gender,"trans")==0)
+				break;
+			else{
+			 go(24,20);printf("Invalid Gender... Reenter : ");
+			}
+		}
+		go(24,20);colorbox(40);
+		go(24,20);printf("Please enter you mobile");
+		for(;;){
+			go(14,35);fflush(stdin);scanf("%s%*c",v.mobile);
+			if(isValidv_mobile(v.mobile)){
+				break;
+			}
+			else{
+			 go(24,20);printf("Invalid Mobile... Reenter it : ");
+			}	
+		}
+		go(24,20);colorbox(40);
+		go(24,20);printf("Please enter you address");
+		for(;;){
+			go(16,35);fflush(stdin);gets(v.address);
+			if(isValidv_address(v.address)){
+				break;
+			}
+			else{
+			 go(24,20);printf("Invalid address... Reenter it : ");
+			}	
+		}
+		go(24,20);colorbox(40);
+		go(24,20);printf("Please enter you pincode");
+		for(;;){
+			go(18,35);fflush(stdin);scanf("%s%*c",v.pincode);
+			if(isValidv_pincode(v.pincode)){
+				break;
+			}
+			else{
+			 go(24,20);printf("Invalid pin code... Reenter it : ");
+			}	
+		}
+		go(20,20);printf("Save record [Y/N] ? ");
+		go(22,45);
+		fflush(stdin);
+		choice=tolower(getchar());
+		if(choice=='y'){
+			fseek(fp,0,SEEK_END);
+			fwrite(&v,sizeof(v),1,fp);
+			go(24,20);printf("Record Saved...\n");
+		}
+		else{
+		 go(24,20);printf("Record Not Saved...\n");
+		}
+		go(24,20);system("pause");fclose(fp);
+		return;
+	}
+}
+//Voter View all Voter//
+void screen1_2_1_2(){
+	struct voter v;
+	int r=10;
+	fseek(fp,0,SEEK_SET); //Set file pointer to top of the file
+	rewind(fp);
+	system("cls");
+	centerh("=========== List of Voter ===========",5,CYAN);
+	go(8,2);printf("%-10s %-10s %-10s %-10s %-10s %-10s %-10s\n","ID","Name","Age","Gender","Mobile","Address","Pin Code");
+	while(fread(&v,sizeof(v),1,fp)){
+		go(r,2);printf("%-10d %-10s %-10d %-10s %-10s %-10s %-10s\n",v.ID,v.name,v.age,v.gender,v.mobile,v.address,v.pincode);
+		r++;
+	}
+	go(24,20);system("pause");
+	return;
+}
+//Voter -- search Voter//
+void screen1_2_1_3(){
+	struct voter v;
+	int r,found=false;
+	system("cls");
+	textbackground(BLACK);
+	centerh("========== Search the voter ==========",2,CYAN);
+	go(5,20);printf("ID to Search ");
+	scanf("%d%*c",&r);
+	fseek(fp,0,SEEK_SET); //Set file pointer to top of the file
+	while(fread(&v,sizeof(v),1,fp)){
+		if(v.ID==r){
+			found=true;
+			break;
+		}
+	}
+	if(found){
+	go(8,20);printf("The record is Found ");
+    go(10,20);printf("ID: %d",v.ID);
+    go(12,20);printf("Name: %s",v.name);
+    go(14,20);printf("Age: %d",v.age);
+    go(16,20);printf("Gender: %s",v.gender);
+    go(18,20);printf("Mobile: %s",v.mobile);
+	go(20,20);printf("Address: %s",v.address);
+	go(22,20);printf("Pin Code: %s",v.pincode);
+	}
+	else{
+		 go(8,20);printf("Not Found\n");
+	}
+	go(24,20);printf("Press any key  to continue...");
+	getch();
+	return;
+}
+//Voter -- update data of voter//
+void screen1_2_1_4(){
+	struct voter v;
+	int r,found=false;
+	system("cls");
+	centerh("========== Update data of voter ===========",2,CYAN);
+	go(4,20);printf("ID to update : ");
+	scanf("%d%*c",&r);
+	fseek(fp,0,SEEK_SET); //Set file pointer to top of the file
+	while(fread(&v,sizeof(v),1,fp)){
+		if(v.ID==r){
+			found=true;
+			break;
+		}
+	}
+	if(found){
+	go(6,20);printf("Record is found");
+	go(8,20);printf("Old Name is %s, New Name : ",v.name);
+	go(10,20);printf("Old Age is %d : ",v.age);scanf("%d%*c",&v.age);
+	go(12,20);printf("Old Gender is  %s : ",v.gender);scanf("%s",v.gender);
+	go(14,20);printf("Old Mobile no. is  %s : ",v.mobile);scanf("%s%*c",v.mobile);
+	go(16,20);printf("Old Address is %s : ",v.address); gets(v.address);
+	go(18,20);printf("Old Address is %s :",v.pincode);scanf("%s%*c",v.pincode);
+	fseek(fp,-sizeof(v),SEEK_CUR); // Goto top of the searched record
+	fwrite(&v,sizeof(v),1,fp); //overwrite the current record
+	go(20,20);printf("Record Updated\n");
+	}
+	else{
+		go(7,20);printf("Not Found\n");
+	}
+	go(22,20);printf("\nPress any key  to continue...");
+	getch();
+	return;
+}
+//Voting--Voter login//
+void screen1_3_1(){
+	char userid[51],password[51],ch;
+	int i=0;
+	for(;;){
+		system("cls");
+		textbackground(BLACK);
+		centerh("Voter Login",5,CYAN);
+		go(8,20);printf("============= Voter Authentication =============",YELLOW);
+		go(10,20);textcolor(WHITE);cprintf("User ID");
+		go(10,30); printf(":");go(10,35);colorbox(8);
+		go(12,20);textcolor(WHITE);cprintf("Password");
+		go(12,30); printf(":");go(12,35);colorbox(8);
+		textcolor(WHITE);
+		go(24,20);colorbox(40);
+		go(24,20);printf("Please enter your User ID here");
+		go(10,35);gets(userid);
+		go(24,20);colorbox(40);
+		go(24,20);printf("Please enter your Password here");
+		go(12,35);
+		while(i<50){
+			ch=getch();
+			if(ch==13) break;//13--Enter key code//
+			else if(ch==8){//8--Backspace//
+				if(i>0){
+					int n;
+					i--;
+					go(12,35);clreol();
+					go(12,35);
+					for(n=0;n<i;n++) putchar('*');
+				}
+			}
+			else{
+				password[i]=ch;
+				putchar('*');
+				i++;
+			}
+		}
+		password[i]='\0';
+		if(strcmp(userid,"admin")==0 && strcmp(password,"123456")==0)
+		{
+			screen1_3_2();
+		}
+		else
+		{
+			go(17,20);printf("Sorry Invalid authentication");
+			go(20,20);printf("Press any key to contine...");
+			getch();
+			return;
+		}
+	}
+}
+//voting--Cast the Vote//
+void screen1_3_2(){
+	struct candidate c;
+	char choice;
+	int votesCount1=0, votesCount2=0, votesCount3=0, votesCount4=0;
+	int i=1;
+	FILE *fp;
+	fp=fopen("candidate.dat","rb+");
+	if(fp==NULL){
+	fp=fopen("candidate.dat","wb+");
+	}
+	for(;;){
+		system("cls");
+		textbackground(BLACK);
+		centerh("============= Cast the Vote =============",3,CYAN);
+		textcolor(RED);
+		go(5,20);textcolor(WHITE);cprintf("Name of Candidate");
+		while(fread(&c,sizeof(c),1,fp)){
+			go(i+7,20);cprintf("%d",i);printf(" %s \n",c.name);
+			i++;
+		}
+		go(++i+7,20);cprintf("R");textcolor(WHITE);cprintf("eturn\n");
+		go(++i+7,20);textcolor(WHITE);cprintf("Please choose your Candidate\n");
+		go(24,20);textcolor(WHITE);cprintf("Select a choice from highlighed characters");
+		go(++i+7,20);textcolor(WHITE);cprintf("Enter choice : ");
+		fflush(stdin);
+		choice=getchar();
+		switch(choice){
+			case '1': votesCount1++; break;
+   			case '2': votesCount2++; break;
+    		case '3': votesCount3++; break;
+   			case '4': votesCount4++; break;	
+			case'r':case 'R':
+				return;
+			default:
+				go(24,20);
+				printf("Invalid choice... Press key to contine");
+				getch();
+		}fclose(fp);
+		go(24,20);system("pause");
+	}	
+}
+//result//
+void screen1_4(){
+	char choice;
+	FILE *fp;
+	fp=fopen("candidate.dat","rb+");
+	if(fp==NULL){
+	fp=fopen("candidate.dat","wb+");
+	}
+	for(;;){
+		system("cls");
+		textbackground(BLACK);
+		centerh("============= Result =============",5,CYAN);
+		textcolor(RED);
+		go(8,20);cprintf("V");textcolor(WHITE);cprintf("ote Count  ");
+		textcolor(RED);
+		go(10,20);cprintf("W");textcolor(WHITE);cprintf("inner");
+		textcolor(RED);
+		go(12,20);cprintf("R");textcolor(WHITE);cprintf("eturn");
+		go(24,20);textcolor(WHITE);cprintf("Select a choice from highlighed characters");
+		go(14,20);textcolor(WHITE);cprintf("Enter choice : ");
+		fflush(stdin);
+		choice=getchar();
+		switch(choice){
+			case 'v' : case 'V':
+				screen1_4_1();
+					break;
+			case 'w' : case 'W':
+				screen1_4_2();
+					break;
+			case 'r': case 'R':
+				return;
+			default:
+				go(24,20);
+				printf("Invalid choice... Press key to contine");
+				getch();
+		}fclose(fp);
+	}
+}
+//result--vote count//
+void screen1_4_1(){
+	struct candidate c;
+	char choice;
+	int i=1,votesCount1=0, votesCount2=0, votesCount3=0, votesCount4=0;
+	FILE *fp;
+	fp=fopen("candidate.dat","rb+");
+	if(fp==NULL){
+	fp=fopen("candidate.dat","wb+");
+	}
+	for(;;){
+		system("cls");
+		textbackground(BLACK);
+		centerh("============== Vote Count ============= ",5,CYAN);
+		while(fread(&c,sizeof(c),1,fp)){
+			go(i+7,20);printf(" %s   %d \n",c.name,votesCount1,votesCount2,votesCount3,votesCount4);
+			i++;
+		}
+		go(++i+7,20);textcolor(RED);cprintf("R");textcolor(WHITE);cprintf("eturn\n");
+		go(++i+7,20);textcolor(WHITE);cprintf("Enter choice : ");
+		fflush(stdin);
+		choice=getchar();
+		switch(choice){
+			case'r':case 'R':
+				return;
+			default:
+				go(24,20);
+				printf("Invalid choice... Press key to contine");
+				getch();
+		}
+		fclose(fp);
+		go(24,20);system("pause");
+		return;
+	}	
+}
+//result--winner//
+void screen1_4_2(){
+	struct candidate c;
+	char choice;
+	int votesCount1=0, votesCount2=0, votesCount3=0, votesCount4=0;
+	FILE *fp;
+	fp=fopen("candidate.dat","rb+");
+	if(fp==NULL){
+	fp=fopen("candidate.dat","wb+");
+	}
+	for(;;){   
+		system("cls");
+		textbackground(BLACK);
+		centerh("============== Winner ============ ",5,CYAN);
+		go(8,20);textcolor(WHITE);cprintf("Winner name:");
+		if(votesCount1>votesCount2 && votesCount1>votesCount3 && votesCount1 >votesCount4)
+	    printf("[%s]",c.name);
+	    else if (votesCount2>votesCount3 && votesCount2>votesCount4 && votesCount2 >votesCount1)
+	    printf("[%s]",c.name);
+	    else if(votesCount3>votesCount4 && votesCount3>votesCount2 && votesCount3 >votesCount1)
+	    printf("[%s]",c.name);
+	    else if(votesCount4>votesCount1 && votesCount4>votesCount2 && votesCount4 >votesCount3)
+	    printf("[%s]",c.name);
+	    else{
+	    	go(10,20);printf("Tie.....");
+		}
+	    fclose(fp);
+		go(24,20);system("pause");
+		return; 
+	}
+}
+//change the password//
+void screen1_5(){
+	struct password p;
+	char choice;
+	fp=fopen("changepassword.dat","rb+");
+	if(fp==NULL){
+		fp=fopen("changepassword.dat","wb+");
+	}
+	for (;;){
+		system("cls");
+		textbackground(BLACK);
+		centerh("============= Change the Password =============",2,CYAN);
+		textcolor(RED);
+		go(4,10);textcolor(WHITE);cprintf("Enter new password");
+		go(4,30); printf(":");go(4,35);colorbox(40);
+		go(8,10);textcolor(WHITE);cprintf("confirm the password");
+		go(8,30); printf(":");go(8,35);colorbox(40);
+		textcolor(WHITE);
+		go(24,20);colorbox(40);
+		go(24,20);printf("Please enter you New Password here");
+		go(4,35);fflush(stdin);gets(p.password);
+		go(24,20);colorbox(40);
+		go(24,20);printf("Please enter Confirm Password here");
+		go(8,35);fflush(stdin);gets(p.password);
+		go(20,20);printf("Save record [Y/N] ? ");
+		go(22,45);
+		fflush(stdin);
+		choice=tolower(getchar());
+		if(choice=='y'){
+			fseek(fp,0,SEEK_END);
+			fwrite(&p,sizeof(p),1,fp);
+			go(24,20);printf("Record Saved...\n");
+		}
+		else{
+		 go(24,20);printf("Record Not Saved...\n");
+		}
+		go(24,20);system("pause");
+		fclose(fp);
+		return;
+	}
+}
